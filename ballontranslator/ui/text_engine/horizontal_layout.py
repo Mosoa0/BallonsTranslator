@@ -46,6 +46,7 @@ from .rendering.ruby import (
     ruby_placement,
     ruby_side_margins,
 )
+from .formatting.line_alignment import block_alignment_flag
 
 
 class _PlainLineLayout(NamedTuple):
@@ -1027,6 +1028,9 @@ class HorizontalTextDocumentLayout(SceneTextLayout):
         option = doc.defaultTextOption()
         # maybe an option for it
         option.setWrapMode(QTextOption.WrapMode.WrapAtWordBoundaryOrAnywhere)
+        paragraph_alignment = block_alignment_flag(block)
+        if paragraph_alignment is not None:
+            option.setAlignment(paragraph_alignment)
         tl.setTextOption(option)
         font = block.charFormat().font()
 

@@ -88,6 +88,7 @@ from .commands import (
     handle_ffmt_change,
     restore_canvas_view_focus,
 )
+from .line_alignment import apply_alignment
 from ... import shared_widget as SW
 
 class LineEdit(QLineEdit):
@@ -924,7 +925,9 @@ class FontFormatPanel(Widget):
         self.colorPicker.apply_color.connect(self.on_apply_color)
 
         self.alignBtnGroup = AlignmentBtnGroup(self)
-        self.alignBtnGroup.param_changed.connect(self.on_param_changed)
+        self.alignBtnGroup.param_changed.connect(
+            lambda name, value: apply_alignment(self, name, value)
+        )
 
         self.formatBtnGroup = FormatGroupBtn(self)
         self.formatBtnGroup.param_changed.connect(self.on_param_changed)
