@@ -13,6 +13,7 @@ from qtpy.QtWidgets import (
 from qtpy.QtCore import Qt, Signal, QSize, QItemSelection, QTimer
 from qtpy.QtGui import QStandardItem, QStandardItemModel, QMouseEvent, QFont, QIntValidator, QValidator, QFocusEvent
 
+from .export_all import ExportRangeSelector
 from .custom_widget import ConfigComboBox, NoBorderPushBtn, ScrollBar, Widget
 from ballontranslator.utils import shared
 from ballontranslator.utils.config import OCRTextPostprocess, pcfg
@@ -698,6 +699,7 @@ class ConfigPanel(OutsideClickFramelessMixin, FramelessWindow):
     font_list_changed = Signal(bool)
     compact_vertical_punctuation_changed = Signal(bool)
     apply_auto_tate_chu_yoko_requested = Signal()
+    export_all_images_requested = Signal()
     show_pre_MT_keyword_window = Signal()
     show_MT_keyword_window = Signal()
     show_OCR_keyword_window = Signal()
@@ -1379,6 +1381,33 @@ class ConfigPanel(OutsideClickFramelessMixin, FramelessWindow):
         sublock.layout().setAlignment(Qt.AlignmentFlag.AlignLeft)
         sublock.layout().insertStretch(-1)
         imsave_sublock.layout().addWidget(sublock)
+
+        self.export_all_images_btn = QPushButton(
+            self.tr('Export result images')
+        )
+        self.export_all_images_btn.setToolTip(
+            self.tr(
+                'Render and save the selected pages of the open project '
+                'with the format and quality above, instead of one page '
+                'at a time.'
+            )
+        )
+        self.export_all_images_btn.clicked.connect(
+            self.export_all_images_requested.emit
+        )
+        self.export_range_selector = ExportRangeSelector()
+        # One row under the format block: the action first, then the
+        # pages it will act on.
+        export_row = Widget()
+        export_row.setObjectName('ConfigInlineRow')
+        export_row_layout = QHBoxLayout(export_row)
+        export_row_layout.setContentsMargins(0, 0, 0, 0)
+        export_row_layout.setSpacing(12)
+        export_row_layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        export_row_layout.addWidget(self.export_all_images_btn)
+        export_row_layout.addWidget(self.export_range_selector)
+        export_all_sublock = applicationConfigPanel.addBlockWidget(export_row)
+        export_all_sublock.layout().setAlignment(Qt.AlignmentFlag.AlignLeft)
 
         self.intermediate_imgformat_combobox, intermediate_imsave_sublock = applicationConfigPanel.addCombobox(['PNG', 'JXL'], self.tr('Intermediate image format'))
         self.intermediate_imgformat_combobox.activated.connect(self.on_intermediate_imgformat_changed)
