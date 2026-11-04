@@ -23,6 +23,7 @@ from qtpy.QtGui import (
     QMouseEvent,
 )
 
+from .zoom_control import ZoomControl
 from .custom_widget import Widget, PaintQSlider
 from .module_tool_button import ModuleSelectionWidget
 from .misc import themed_icon_path
@@ -628,6 +629,8 @@ class BottomBar(Widget):
         self.originalSlider.setFixedWidth(150)
         self.originalSlider.setRange(0, 100)
 
+        self.zoomControl = ZoomControl(self)
+
         self.editingLayerSlider = PaintQSlider(self.tr("Editing layer opacity"), Qt.Orientation.Horizontal, self)
         self.editingLayerSlider.setFixedWidth(150)
         self.editingLayerSlider.setValue(100)
@@ -641,6 +644,7 @@ class BottomBar(Widget):
         # self.hlayout.addWidget(self.transTranspageBtn)
         # self.hlayout.addWidget(self.inpainterStatBtn)
         self.hlayout.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum))
+        self.hlayout.addWidget(self.zoomControl)
         self.hlayout.addWidget(self.editingLayerSlider)
         self.hlayout.addWidget(self.originalSlider)
         self.hlayout.addWidget(self.paintChecker)
