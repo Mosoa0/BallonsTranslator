@@ -88,6 +88,7 @@ from .commands import (
     handle_ffmt_change,
     restore_canvas_view_focus,
 )
+from .letter_case import LetterCaseBtnGroup, apply_letter_case
 from ... import shared_widget as SW
 
 class LineEdit(QLineEdit):
@@ -929,6 +930,13 @@ class FontFormatPanel(Widget):
         self.formatBtnGroup = FormatGroupBtn(self)
         self.formatBtnGroup.param_changed.connect(self.on_param_changed)
 
+        self.letterCaseBtnGroup = LetterCaseBtnGroup(
+            self, button_size=(26, 26)
+        )
+        self.letterCaseBtnGroup.case_requested.connect(
+            lambda mode: apply_letter_case(self, mode)
+        )
+
         self.verticalChecker = QFontChecker(self)
         self.verticalChecker.setObjectName("FontVerticalChecker")
         self.verticalChecker.clicked.connect(lambda : self.on_param_changed('vertical', self.verticalChecker.isChecked()))
@@ -1071,8 +1079,9 @@ class FontFormatPanel(Widget):
         hl3.addWidget(self.fontsizebox)
         hl3.addLayout(lettersp_hlayout)
         hl3.addLayout(linesp_hlayout)
+        hl3.addWidget(self.letterCaseBtnGroup)
         hl3.setContentsMargins(3, FONTFORMAT_SPACING, 3, 0)
-        hl3.setSpacing(12)
+        hl3.setSpacing(8)
         hl4 = QHBoxLayout()
         hl4.setAlignment(Qt.AlignmentFlag.AlignCenter)
         hl4.addWidget(self.foldTextBtn)
