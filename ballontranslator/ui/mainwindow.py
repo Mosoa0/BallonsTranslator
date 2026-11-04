@@ -59,6 +59,10 @@ from .custom_widget import ScrollBar, Widget, ViewWidget
 from .global_search_widget import GlobalSearchWidget
 from .llm_context_editor import LLMContextEditor
 from .text_engine.editing.commands import GlobalRepalceAllCommand
+from .text_engine.editing.duplicate import (
+    DUPLICATE_SHORTCUT,
+    duplicate_selected_blocks,
+)
 from .text_engine.transforms.grid import start_grid_numba_warmup
 from .text_engine.effects.paint import (
     start_effect_paint_numba_warmup,
@@ -1062,6 +1066,8 @@ class MainWindow(mainwindow_cls):
         shortcutCapitalize.activated.connect(
             self.st_manager.capitalize_selected_textitems
         )
+        shortcutDuplicate = QShortcut(QKeySequence(DUPLICATE_SHORTCUT), self)
+        shortcutDuplicate.activated.connect(duplicate_selected_blocks)
 
         shortcutDelete = QShortcut(QKeySequence.StandardKey.Delete, self)
         shortcutDelete.activated.connect(self.shortcutDelete)

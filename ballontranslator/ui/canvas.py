@@ -28,6 +28,10 @@ from .custom_widget import ScrollBar, FadeLabel
 from .image_edit import ImageEditMode, DrawingLayer, StrokeImgItem, PenShape, shape_fill_image, shape_fill_path
 from .page_search_widget import PageSearchWidget
 from .text_engine.editing.commands import MoveByKeyCommand
+from .text_engine.editing.duplicate import (
+    DUPLICATE_SHORTCUT,
+    duplicate_selected_blocks,
+)
 from .text_engine.editing.move_session import TextItemMoveSession
 from ballontranslator.utils import shared
 from ballontranslator.utils.config import pcfg
@@ -1711,6 +1715,8 @@ class Canvas(QGraphicsScene):
             copy_act.setShortcut(QKeySequence.StandardKey.Copy)
             paste_act = menu.addAction(self.tr("Paste"))
             paste_act.setShortcut(QKeySequence.StandardKey.Paste)
+            duplicate_act = menu.addAction(self.tr("Duplicate"))
+            duplicate_act.setShortcut(QKeySequence(DUPLICATE_SHORTCUT))
             delete_act = menu.addAction(self.tr("Delete"))
             delete_act.setShortcut(QKeySequence("Ctrl+D"))
             copy_src_act = menu.addAction(self.tr("Copy source text"))
@@ -1743,6 +1749,8 @@ class Canvas(QGraphicsScene):
                 self.on_copy()
             elif rst == paste_act:
                 self.on_paste()
+            elif rst == duplicate_act:
+                duplicate_selected_blocks()
             elif rst == copy_src_act:
                 self.copy_src_signal.emit()
             elif rst == paste_src_act:
