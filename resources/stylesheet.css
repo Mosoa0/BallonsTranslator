@@ -1292,7 +1292,9 @@ QWidget#RunPipelineSettingsSection QCheckBox::indicator {
 
 QSpinBox#RunPipelineRangeStart,
 QSpinBox#RunPipelineRangeEnd,
-QSpinBox#RunPipelinePriorContextTokenBudget {
+QSpinBox#RunPipelinePriorContextTokenBudget,
+QSpinBox#ExportRangeStart,
+QSpinBox#ExportRangeEnd {
     min-height: 24px;
     max-height: 24px;
     padding-left: 8px;
@@ -1310,7 +1312,11 @@ QSpinBox#RunPipelineRangeStart:focus,
 QSpinBox#RunPipelineRangeEnd:hover,
 QSpinBox#RunPipelineRangeEnd:focus,
 QSpinBox#RunPipelinePriorContextTokenBudget:hover,
-QSpinBox#RunPipelinePriorContextTokenBudget:focus {
+QSpinBox#RunPipelinePriorContextTokenBudget:focus,
+QSpinBox#ExportRangeStart:hover,
+QSpinBox#ExportRangeStart:focus,
+QSpinBox#ExportRangeEnd:hover,
+QSpinBox#ExportRangeEnd:focus {
     border: none;
     border-bottom: 1px solid rgb(30, 147, 229);
 }
@@ -1320,7 +1326,11 @@ QSpinBox#RunPipelineRangeStart::down-button,
 QSpinBox#RunPipelineRangeEnd::up-button,
 QSpinBox#RunPipelineRangeEnd::down-button,
 QSpinBox#RunPipelinePriorContextTokenBudget::up-button,
-QSpinBox#RunPipelinePriorContextTokenBudget::down-button {
+QSpinBox#RunPipelinePriorContextTokenBudget::down-button,
+QSpinBox#ExportRangeStart::up-button,
+QSpinBox#ExportRangeStart::down-button,
+QSpinBox#ExportRangeEnd::up-button,
+QSpinBox#ExportRangeEnd::down-button {
     width: 0px;
     height: 0px;
     border: none;

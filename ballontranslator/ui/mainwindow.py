@@ -56,6 +56,7 @@ from .font_refresh import FontRefreshController
 from .update_dialog import UpdateReleaseDialog
 from .run_pipeline_dialog import RunPipelineDialog
 from .custom_widget import ScrollBar, Widget, ViewWidget
+from .export_all import export_all_result_images
 from .global_search_widget import GlobalSearchWidget
 from .llm_context_editor import LLMContextEditor
 from .text_engine.editing.commands import GlobalRepalceAllCommand
@@ -579,6 +580,9 @@ class MainWindow(mainwindow_cls):
         self.configPanel.apply_auto_tate_chu_yoko_requested.connect(
             self.apply_auto_tate_chu_yoko_to_project
         )
+        self.configPanel.export_all_images_requested.connect(
+            self.on_export_all_images
+        )
         self.on_show_only_custom_font(pcfg.let_show_only_custom_fonts_flag)
         self.font_refresh = FontRefreshController(self)
         self.font_change_detector = None
@@ -868,6 +872,9 @@ class MainWindow(mainwindow_cls):
             self.pageList.addItem(lstitem)
             if imgname == self.imgtrans_proj.current_img:
                 self.pageList.setCurrentItem(lstitem)
+        self.configPanel.export_range_selector.set_page_count(
+            len(self.imgtrans_proj.pages)
+        )
         self.llmContextEditor.set_project(self.imgtrans_proj)
 
     def _set_left_panel_content(
@@ -1619,6 +1626,12 @@ class MainWindow(mainwindow_cls):
         if self.imgtrans_proj.directory is not None:
             LOGGER.debug('Manually saving...')
             self.saveCurrentPage(update_scene_text=True, save_proj=True, restore_interface=True, save_rst_only=False)
+
+    def on_export_all_images(self) -> None:
+        """Save result images for the pages chosen in the settings panel."""
+        export_all_result_images(
+            self, self.configPanel.export_range_selector.page_range()
+        )
 
     def saveCurrentPage(self, update_scene_text=True, save_proj=True, restore_interface=False, save_rst_only=False, keep_exist_as_backup=False):
         
