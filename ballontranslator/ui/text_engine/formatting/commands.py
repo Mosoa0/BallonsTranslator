@@ -179,6 +179,12 @@ def ffmt_change_vertical(param_name: str, values: bool, act_ffmt: FontFormat, is
     for blkitem, value in zip(blkitems, values):
         blkitem.setVertical(value)
 
+@font_formating()
+def ffmt_change_wrap_at_word_boundary(param_name: str, values: bool, act_ffmt: FontFormat, is_global: bool, blkitems: List[TextBlkItem], **kwargs):
+    from .word_wrap import set_word_wrap
+    for blkitem, value in zip(blkitems, values):
+        set_word_wrap(blkitem, value)
+
 @font_formating(push_undostack=True)
 def ffmt_change_standard_vertical_roman_alignment(
     param_name: str,

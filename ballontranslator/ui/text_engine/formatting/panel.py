@@ -88,6 +88,8 @@ from .commands import (
     handle_ffmt_change,
     restore_canvas_view_focus,
 )
+from .word_wrap import PARAM_NAME as WORD_WRAP_PARAM
+from .word_wrap import create_word_wrap_checker
 from ... import shared_widget as SW
 
 class LineEdit(QLineEdit):
@@ -929,6 +931,8 @@ class FontFormatPanel(Widget):
         self.formatBtnGroup = FormatGroupBtn(self)
         self.formatBtnGroup.param_changed.connect(self.on_param_changed)
 
+        self.wordWrapChecker = create_word_wrap_checker(self)
+
         self.verticalChecker = QFontChecker(self)
         self.verticalChecker.setObjectName("FontVerticalChecker")
         self.verticalChecker.clicked.connect(lambda : self.on_param_changed('vertical', self.verticalChecker.isChecked()))
@@ -1061,6 +1065,7 @@ class FontFormatPanel(Widget):
         vertical_layout.addWidget(self.verticalChecker)
         vertical_layout.addWidget(self.tateChuYokoChecker)
         vertical_layout.addWidget(self.romanAlignmentChecker)
+        vertical_layout.addWidget(self.wordWrapChecker)
         vertical_layout.setSpacing(0)
         vertical_layout.setContentsMargins(0, 0, 0, 0)
         hl2.addLayout(vertical_layout)
@@ -1465,6 +1470,9 @@ class FontFormatPanel(Widget):
             preserve_focused_editors=False,
         )
         self.verticalChecker.setChecked(font_format.vertical)
+        self.wordWrapChecker.setChecked(
+            getattr(font_format, WORD_WRAP_PARAM, False)
+        )
         self.romanAlignmentChecker.setChecked(
             font_format.standard_vertical_roman_alignment
         )

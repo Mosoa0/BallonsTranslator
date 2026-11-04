@@ -711,6 +711,7 @@ class FontFormat(Config):
     alignment: int = 0
     vertical: bool = False
     standard_vertical_roman_alignment: bool = True
+    wrap_at_word_boundary: bool = False
     # None is constructor-only so legacy payloads can distinguish an omitted
     # weight from an explicitly saved Normal value. __post_init__ canonicalizes
     # every live instance to FontWeight.

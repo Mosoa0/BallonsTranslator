@@ -46,6 +46,7 @@ from .rendering.ruby import (
     ruby_placement,
     ruby_side_margins,
 )
+from .formatting.word_wrap import wrap_mode
 
 
 class _PlainLineLayout(NamedTuple):
@@ -1025,8 +1026,7 @@ class HorizontalTextDocumentLayout(SceneTextLayout):
         self._ruby_metrics.append(ruby_metrics)
 
         option = doc.defaultTextOption()
-        # maybe an option for it
-        option.setWrapMode(QTextOption.WrapMode.WrapAtWordBoundaryOrAnywhere)
+        option.setWrapMode(wrap_mode(self.fontformat))
         tl.setTextOption(option)
         font = block.charFormat().font()
 
