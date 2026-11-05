@@ -193,6 +193,10 @@ FONT_FEATURES_AVAILABLE = bool(
 )
 MAX_ANNOTATION_ID_LENGTH = 128
 MAX_LETTER_SPACING = 10.0
+#: Smallest value the panel accepts. Letter spacing is a multiplier whose
+#: identity is 1.0; zero would give every glyph no advance at all. Legacy
+#: zeros from old projects are still read as 1.0.
+MIN_LETTER_SPACING = 0.01
 MAX_LINE_SPACING = 100.0
 
 
@@ -2275,14 +2279,24 @@ def letter_spacing_value(
     char_format: QTextCharFormat,
     fallback: float = 1.0,
 ) -> float:
-    """Return semantic character spacing as a font-size multiplier."""
+    """Return semantic character spacing as a font-size multiplier.
+
+    A stored zero is legacy "no extra spacing" from when the value was an
+    offset rather than a multiplier. It reads as identity: those runs carry
+    no native spacing and already render that way.
+
+    >>> letter_spacing_value(QTextCharFormat(), 0)
+    1.0
+    """
     value = canonical_letter_spacing(
         char_format.property(AnnotationProperty.LETTER_SPACING)
     )
     if value is not None:
-        return value
+        return 1.0 if value == 0 else value
     fallback_value = canonical_letter_spacing(fallback)
-    return 1.0 if fallback_value is None else fallback_value
+    if fallback_value is None or fallback_value == 0:
+        return 1.0
+    return fallback_value
 
 
 def apply_letter_spacing(

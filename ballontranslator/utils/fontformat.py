@@ -838,6 +838,17 @@ class FontFormat(Config):
             if 'family' in da:
                 self.font_family = da['family']
 
+        # Letter spacing is a multiplier whose identity is 1.0. Legacy
+        # payloads stored extra spacing, where 0 meant "none"; carried over
+        # unchanged it both misreports the panel value and would collapse
+        # every glyph if it ever reached the renderer.
+        if (
+            isinstance(self.letter_spacing, (int, float))
+            and not isinstance(self.letter_spacing, bool)
+            and self.letter_spacing == 0
+        ):
+            self.letter_spacing = 1.0
+
         if not isinstance(self.standard_vertical_roman_alignment, bool):
             LOGGER.warning(
                 'Ignoring invalid standard vertical Roman alignment value '

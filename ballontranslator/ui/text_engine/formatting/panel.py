@@ -73,6 +73,8 @@ from ..annotations import (
     EMPHASIS_GLYPHS,
     EMPHASIS_POSITIONS,
     EMPHASIS_STYLES,
+    MAX_LETTER_SPACING,
+    MIN_LETTER_SPACING,
     OLDSTYLE_NUMS,
     RubyValidationError,
 )
@@ -955,9 +957,13 @@ class FontFormatPanel(Widget):
             )
         )
 
-        self.letterSpacingBox = SizeComboBox([0, 10], "letter_spacing", self)
+        self.letterSpacingBox = SizeComboBox(
+            [MIN_LETTER_SPACING, MAX_LETTER_SPACING], "letter_spacing", self
+        )
         self.letterSpacingBox.setObjectName("FontFormatSizeBox")
-        self.letterSpacingBox.addItems(["0.0"])
+        # The sole 0.0 preset dated from when this value was an offset.
+        # As a multiplier, 1.0 is the identity and 0 renders nothing.
+        self.letterSpacingBox.addItems(["0.8", "0.9", "1.0", "1.1", "1.2"])
         self.letterSpacingBox.setToolTip(self.tr("Change letter spacing"))
         self.letterSpacingBox.setMinimumWidth(int(self.letterSpacingBox.height() * 2.5))
         self.letterSpacingBox.param_changed.connect(self.on_param_changed)
@@ -1110,6 +1116,11 @@ class FontFormatPanel(Widget):
 
     def on_param_changed(self, param_name: str, value):
         func = handle_ffmt_change.get(param_name)
+        if param_name == 'letter_spacing':
+            # SizeComboBox.value() reports a typed value unclamped, and
+            # font_formating records it on the FontFormat before the handler
+            # runs, so a hand-entered 0 is floored here, once, for both.
+            value = max(MIN_LETTER_SPACING, value)
         func_kwargs = {}
         if param_name in {'font_size', 'rel_font_size'}:
             func_kwargs['clip_size'] = True
